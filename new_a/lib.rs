@@ -84,9 +84,7 @@ mod a {
         /// Call it only once
         #[ink(message, selector = 0x4D475254)]
         pub fn migrate(&mut self) -> Result<()> {
-            if let Some(_old_state @ OldState { field_1, field_2 }) =
-                get_contract_storage(&0x0000007b)?
-            {
+            if let Some(_old_state @ OldState { field_1, field_2 }) = get_contract_storage(&123)? {
                 // performs field swap
                 self.updated_old_state.set(&UpdatedOldState {
                     field_1: field_2,
