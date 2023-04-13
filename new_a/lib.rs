@@ -5,25 +5,13 @@
 mod a {
 
     use ink::{
-        codegen::EmitEvent,
         env::{get_contract_storage, Error as InkEnvError},
         prelude::{format, string::String},
-        reflect::ContractEventBase,
         storage::{traits::ManualKey, Lazy},
     };
     use scale::{Decode, Encode};
 
     pub type Result<T> = core::result::Result<T, Error>;
-
-    type Event = <A as ContractEventBase>::Type;
-
-    /// Event emitted when TheButton is created
-    #[ink(event)]
-    #[derive(Debug)]
-    pub struct OldStateRead {
-        field_1: u32,
-        field_2: bool,
-    }
 
     #[derive(Debug, PartialEq, Eq, Encode, Decode)]
     #[cfg_attr(feature = "std", derive(scale_info::TypeInfo))]
@@ -99,11 +87,6 @@ mod a {
             if let Some(_old_state @ OldState { field_1, field_2 }) =
                 get_contract_storage(&0x0000007b)?
             {
-                Self::emit_event(
-                    self.env(),
-                    Event::OldStateRead(OldStateRead { field_1, field_2 }),
-                );
-
                 // performs field swap
                 self.updated_old_state.set(&UpdatedOldState {
                     field_1: field_2,
@@ -112,13 +95,6 @@ mod a {
                 return Ok(());
             }
             panic!("Migration has failed")
-        }
-
-        fn emit_event<EE>(emitter: EE, event: Event)
-        where
-            EE: EmitEvent<A>,
-        {
-            emitter.emit_event(event);
         }
     }
 
