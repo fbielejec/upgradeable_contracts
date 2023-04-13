@@ -3,14 +3,13 @@
 
 #[ink::contract]
 mod a {
-    use ink::env::DefaultEnvironment;
-    use ink::storage::Lazy;
     use ink::{
         env::{
             call::{build_call, ExecutionInput},
-            set_code_hash, Error as InkEnvError,
+            set_code_hash, DefaultEnvironment, Error as InkEnvError,
         },
         prelude::{format, string::String},
+        storage::{traits::ManualKey, Lazy},
     };
     use scale::{Decode, Encode};
 
@@ -29,37 +28,39 @@ mod a {
         }
     }
 
-    #[derive(Debug, Default)]
+    #[derive(Default, Debug)]
     #[ink::storage_item]
-    pub struct Data {
-        value: u32,
+    pub struct OldState {
+        pub field_1: u32,
+        pub field_2: bool,
     }
 
     #[ink(storage)]
     pub struct A {
-        pub data: Lazy<Data>,
+        old_state: Lazy<OldState, ManualKey<123>>,
     }
 
     impl A {
         /// Creates a new contract.
         #[ink(constructor)]
         pub fn new() -> Self {
-            let data = Data { value: 0 };
-            let mut this = Self { data: Lazy::new() };
-            this.data.set(&data);
-            this
+            Self {
+                old_state: Lazy::new(),
+            }
         }
 
         #[ink(message)]
-        pub fn get_value(&self) -> u32 {
-            self.data.get_or_default().value
+        pub fn get_values(&self) -> (u32, bool) {
+            let old_state = self.old_state.get_or_default();
+            (old_state.field_1, old_state.field_2)
         }
 
         #[ink(message)]
-        pub fn set_value(&mut self, value: u32) -> Result<()> {
-            let mut data = self.data.get_or_default();
-            data.value = value;
-            self.data.set(&data);
+        pub fn set_values(&mut self, field_1: u32, field_2: bool) -> Result<()> {
+            let mut data = self.old_state.get_or_default();
+            data.field_1 = field_1;
+            data.field_2 = field_2;
+            self.old_state.set(&data);
             Ok(())
         }
 

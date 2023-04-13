@@ -276,9 +276,9 @@ dependencies = [
 
 [[package]]
 name = "ink_codegen"
-version = "4.1.0"
+version = "4.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0da21ea8189beef99f92fcea3f07018e3278a0e084b86705d3b5e58c3ee38645"
+checksum = "283b022679ef75898db5c28b89388412d93f91cea4f0b1443426901cb391b079"
 dependencies = [
  "blake2",
  "derive_more",
@@ -300,9 +300,9 @@ dependencies = [
 
 [[package]]
 name = "ink_engine"
-version = "4.1.0"
+version = "4.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d4ec97173506ba6f3cf966a42c0d5f776c2ef843da15854fa1f57d23d2be4ee4"
+checksum = "daed9b710cba6f50f1fa0372a7e8a47a35624d84af4ef2c3a8d34d4e96202d1c"
 dependencies = [
  "blake2",
  "derive_more",
@@ -315,9 +315,9 @@ dependencies = [
 
 [[package]]
 name = "ink_env"
-version = "4.1.0"
+version = "4.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "639a8172a9911fc6f7384623d25ff6f0834d48b16f5c21e4b0eb656b3de1f877"
+checksum = "a41c6a3f4e740e27449f805ed47f536a35fb254ebcd03d2480014589331cda3e"
 dependencies = [
  "arrayref",
  "blake2",
@@ -342,9 +342,9 @@ dependencies = [
 
 [[package]]
 name = "ink_ir"
-version = "4.1.0"
+version = "4.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8aeb30e90744ebf9cce7300a1d013ab91e1b84ebc9887ddabd9b7688c6ac20c1"
+checksum = "946b940d26e69ded558daafead0979f25f2e9d7e2cf86027f250c3942aa4d0f1"
 dependencies = [
  "blake2",
  "either",
@@ -356,9 +356,9 @@ dependencies = [
 
 [[package]]
 name = "ink_macro"
-version = "4.1.0"
+version = "4.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "968f443cf4f177c2cc9d147e33336de19700c8f7e01a6ad5942d9a324e9d3a6c"
+checksum = "6642450e6169cfaf81717b1d62b2abae48a6b41d3f70f885b6aeff7bb14ea96b"
 dependencies = [
  "ink_codegen",
  "ink_ir",
@@ -372,9 +372,9 @@ dependencies = [
 
 [[package]]
 name = "ink_metadata"
-version = "4.1.0"
+version = "4.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8a8bb193f81ddda8329568ae05786e12a901ea1684c444f780440ecac2bd57b1"
+checksum = "5dfcfa666ada5729c7e4d3d986cd196365a2c469459fced4fa31dc6ad87c4d8f"
 dependencies = [
  "derive_more",
  "impl-serde",
@@ -395,9 +395,9 @@ dependencies = [
 
 [[package]]
 name = "ink_primitives"
-version = "4.1.0"
+version = "4.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "55850e661a97f3158fad3309e0188d6f2dcd5fc7de4c19b969c4c66988886f21"
+checksum = "f1b3f711d857d2de7c08158369cc32a762833ac211a00aac7931992094e25741"
 dependencies = [
  "derive_more",
  "ink_prelude",
@@ -408,9 +408,9 @@ dependencies = [
 
 [[package]]
 name = "ink_storage"
-version = "4.1.0"
+version = "4.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f376d6fd2137ea2a42a9f08a83b29e309862a020a0841c0cb9a78c40f1e2e6e5"
+checksum = "2872a5ea4559433381b2d82b08b6acd33ce934b07a22ce951c6f00483680c950"
 dependencies = [
  "array-init",
  "cfg-if",
@@ -426,15 +426,16 @@ dependencies = [
 
 [[package]]
 name = "ink_storage_traits"
-version = "4.1.0"
+version = "4.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3a1ff58a3db0bb76b92981236172a3c4d02823996354006f07032e0d3b091024"
+checksum = "8c90e11b60233ae5ab877854739da2c380a337cb31b3900cb50328821c0381b6"
 dependencies = [
  "ink_metadata",
  "ink_prelude",
  "ink_primitives",
  "parity-scale-codec",
  "scale-info",
+ "syn 1.0.109",
 ]
 
 [[package]]
@@ -663,9 +664,9 @@ dependencies = [
 
 [[package]]
 name = "secp256k1"
-version = "0.27.0"
+version = "0.26.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "25996b82292a7a57ed3508f052cfff8640d38d32018784acd714758b43da9c8f"
+checksum = "4124a35fe33ae14259c490fd70fa199a32b9ce9502f2ee6bc4f81ec06fa65894"
 dependencies = [
  "secp256k1-sys",
 ]
@@ -701,9 +702,9 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.95"
+version = "1.0.96"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d721eca97ac802aa7777b701877c8004d950fc142651367300d21c1cc0194744"
+checksum = "057d394a50403bcac12672b2b18fb387ab6d289d957dab67dd201875391e52f1"
 dependencies = [
  "itoa",
  "ryu",

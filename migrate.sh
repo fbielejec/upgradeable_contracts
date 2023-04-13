@@ -40,23 +40,23 @@ function get_address {
   cat $ADDRESSES_FILE | jq --raw-output ".$entry_name"
 }
 
-function get_value() {
+function get_values() {
   local contract_name=$1
   local contract_address=$2
 
   cd "$CONTRACTS_PATH"/$contract_name
 
-  cargo_contract call --url "$NODE" --contract "$contract_address" --message get_value --suri "$AUTHORITY_SEED" --dry-run --output-json
+  cargo_contract call --url "$NODE" --contract "$contract_address" --message get_values --suri "$AUTHORITY_SEED" --dry-run --output-json
 }
 
-function set_value() {
+function set_values() {
   local contract_name=$1
   local contract_address=$2
-  local value=$3
+  local values=${@:3}
 
   cd "$CONTRACTS_PATH"/$contract_name
 
-  cargo_contract call --url "$NODE" --contract "$contract_address" --message set_value --args $value --suri "$AUTHORITY_SEED" --skip-confirm #--output-json
+  cargo_contract call --url "$NODE" --contract "$contract_address" --message set_values --args $values --suri "$AUTHORITY_SEED" --skip-confirm #--output-json
 }
 
 # --- RUN
@@ -64,8 +64,6 @@ function set_value() {
 run_ink_dev
 
 # --- compile contracts
-# ink_build rustup target add wasm32-unknown-unknown
-# ink_build rustup component add rust-src
 
 cd "$CONTRACTS_PATH"/old_a
 cargo_contract build --release
@@ -84,11 +82,11 @@ OLD_A=$(cargo_contract instantiate --url "$NODE" --constructor new --suri "$AUTH
 
 # --- health checks
 
-echo "OldA value after initialization "$(get_value old_a $OLD_A)" "
+echo "OldA values after initialization "$(get_values old_a $OLD_A)" "
 
-set_value old_a $OLD_A 1
+set_values old_a $OLD_A 7 false
 
-echo "OldA value after set "$(get_value old_a $OLD_A)" "
+echo "OldA values after set "$(get_value old_a $OLD_A)" "
 
 # --- upload new_a contract code
 
@@ -103,13 +101,13 @@ echo "NewA code hash: "$NEW_A_CODE_HASH""
 
 cd "$CONTRACTS_PATH"/old_a
 
-cargo_contract call --url "$NODE" --contract "$OLD_A" --message set_code --args $NEW_A_CODE_HASH "Some(0x4D475254)" --suri "$AUTHORITY_SEED" --skip-confirm
+cargo_contract call --url "$NODE" --contract "$OLD_A" --message set_code --args $NEW_A_CODE_HASH "None" --suri "$AUTHORITY_SEED" --skip-confirm
 
 NEW_A=$OLD_A
 
 # --- health checks
 
-echo "NewA value after upgrade and storage migration "$(get_value new_a $NEW_A)" "
+echo "NewA values after upgrade and storage migration "$(get_values new_a $NEW_A)" "
 
 # spit adresses to a JSON file
 cd "$CONTRACTS_PATH"
