@@ -2,7 +2,7 @@
 #![allow(clippy::let_unit_value)]
 
 #[ink::contract]
-mod new_a {
+mod a {
 
     use ink::storage::Lazy;
     use ink::{
@@ -32,11 +32,11 @@ mod new_a {
     }
 
     #[ink(storage)]
-    pub struct NewA {
+    pub struct A {
         pub data: Lazy<Data>,
     }
 
-    impl NewA {
+    impl A {
         /// Creates a new contract.
         #[ink(constructor)]
         pub fn new() -> Self {
@@ -44,7 +44,7 @@ mod new_a {
         }
 
         #[ink(message)]
-        pub fn value(&self) -> bool {
+        pub fn get_value(&self) -> bool {
             self.data.get_or_default().value
         }
 
@@ -60,7 +60,7 @@ mod new_a {
         /// Performs a contract storage migration.
         ///
         /// Call it only once
-        #[ink(message)]
+        #[ink(message, selector = 0x4D475254)]
         pub fn migrate(&mut self) -> Result<()> {
             let old_val = self.data.get().unwrap().value as u32;
             // if 0 set false
@@ -73,7 +73,7 @@ mod new_a {
         }
     }
 
-    impl Default for NewA {
+    impl Default for A {
         fn default() -> Self {
             Self::new()
         }
