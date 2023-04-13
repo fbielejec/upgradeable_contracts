@@ -84,9 +84,9 @@ OLD_A=$(cargo_contract instantiate --url "$NODE" --constructor new --suri "$AUTH
 
 echo "OldA values after initialization "$(get_values old_a $OLD_A)" "
 
-set_values old_a $OLD_A 7 false
+set_values old_a $OLD_A 7 true
 
-echo "OldA values after set "$(get_value old_a $OLD_A)" "
+echo "OldA values after set "$(get_values old_a $OLD_A)" "
 
 # --- upload new_a contract code
 

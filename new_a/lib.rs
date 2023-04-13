@@ -5,19 +5,30 @@
 mod a {
 
     use ink::{
+        codegen::EmitEvent,
         env::{get_contract_storage, Error as InkEnvError},
         prelude::{format, string::String},
+        reflect::ContractEventBase,
         storage::{traits::ManualKey, Lazy},
     };
     use scale::{Decode, Encode};
 
     pub type Result<T> = core::result::Result<T, Error>;
 
+    type Event = <A as ContractEventBase>::Type;
+
+    /// Event emitted when TheButton is created
+    #[ink(event)]
+    #[derive(Debug)]
+    pub struct OldStateRead {
+        field_1: u32,
+        field_2: bool,
+    }
+
     #[derive(Debug, PartialEq, Eq, Encode, Decode)]
     #[cfg_attr(feature = "std", derive(scale_info::TypeInfo))]
     pub enum Error {
         InkEnvError(String),
-        FailedMigration,
     }
 
     impl From<InkEnvError> for Error {
@@ -49,7 +60,7 @@ mod a {
     #[ink(storage)]
     pub struct A {
         new_state: Lazy<NewState, ManualKey<456>>,
-        old_state: Lazy<UpdatedOldState, ManualKey<123>>,
+        updated_old_state: Lazy<UpdatedOldState, ManualKey<123>>,
     }
 
     impl A {
@@ -61,10 +72,14 @@ mod a {
 
         #[ink(message)]
         pub fn get_values(&self) -> (bool, u32, u16) {
-            let old_state = self.old_state.get_or_default();
+            let updated_old_state = self.updated_old_state.get_or_default();
             let new_state = self.new_state.get_or_default();
 
-            (old_state.field_1, old_state.field_2, new_state.field_3)
+            (
+                updated_old_state.field_1,
+                updated_old_state.field_2,
+                new_state.field_3,
+            )
         }
 
         /// Terminates the contract.
@@ -81,14 +96,29 @@ mod a {
         /// Call it only once
         #[ink(message, selector = 0x4D475254)]
         pub fn migrate(&mut self) -> Result<()> {
-            if let Some(_old_state @ OldState { field_1, field_2 }) = get_contract_storage(&123)? {
-                self.old_state.set(&UpdatedOldState {
-                    field_1: !matches!(field_1, 0), // if 0 set false
-                    field_2: field_2 as u32,        // sets it to 0 or 1 depending on old value
-                });
-            }
+            if let Some(_old_state @ OldState { field_1, field_2 }) =
+                get_contract_storage(&0x0000007b)?
+            {
+                Self::emit_event(
+                    self.env(),
+                    Event::OldStateRead(OldStateRead { field_1, field_2 }),
+                );
 
-            Err(Error::FailedMigration)
+                // performs field swap
+                self.updated_old_state.set(&UpdatedOldState {
+                    field_1: field_2,
+                    field_2: field_1,
+                });
+                return Ok(());
+            }
+            panic!("Migration has failed")
+        }
+
+        fn emit_event<EE>(emitter: EE, event: Event)
+        where
+            EE: EmitEvent<A>,
+        {
+            emitter.emit_event(event);
         }
     }
 
