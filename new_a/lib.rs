@@ -5,12 +5,11 @@
 mod a {
 
     use ink::{
-        env::{get_contract_storage, set_contract_storage, Error as InkEnvError},
+        env::{get_contract_storage, Error as InkEnvError},
         prelude::{format, string::String},
         storage::{traits::ManualKey, Lazy},
     };
     use scale::{Decode, Encode};
-    use scale_info::build::field_state;
 
     pub type Result<T> = core::result::Result<T, Error>;
 
@@ -82,10 +81,11 @@ mod a {
         /// Call it only once
         #[ink(message, selector = 0x4D475254)]
         pub fn migrate(&mut self) -> Result<()> {
-            if let Some(old_state @ OldState { field_1, field_2 }) = get_contract_storage(&123)? {
-                //
-
-                //
+            if let Some(_old_state @ OldState { field_1, field_2 }) = get_contract_storage(&123)? {
+                self.old_state.set(&UpdatedOldState {
+                    field_1: !matches!(field_1, 0), // if 0 set false
+                    field_2: field_2 as u32,        // sets it to 0 or 1 depending on old value
+                });
             }
 
             Err(Error::FailedMigration)

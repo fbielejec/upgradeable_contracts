@@ -101,7 +101,7 @@ echo "NewA code hash: "$NEW_A_CODE_HASH""
 
 cd "$CONTRACTS_PATH"/old_a
 
-cargo_contract call --url "$NODE" --contract "$OLD_A" --message set_code --args $NEW_A_CODE_HASH "None" --suri "$AUTHORITY_SEED" --skip-confirm
+cargo_contract call --url "$NODE" --contract "$OLD_A" --message set_code --args $NEW_A_CODE_HASH "Some(0x4D475254)" --suri "$AUTHORITY_SEED" --skip-confirm
 
 NEW_A=$OLD_A
 
